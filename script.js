@@ -3,40 +3,38 @@ getSumBtn.append("Get Total Price");
 document.body.appendChild(getSumBtn);
 
 const getSum = () => {
-//Add your code here
-
-	// Get all price elements using class selector (matches test case)
-  const priceElements = document.querySelectorAll('.price');
+	// Add your code here
+	
+  // Get all price elements - works with both .price and .prices classes
+  const priceElements = document.querySelectorAll('.prices, .price');
   
-  // Convert text content to numbers and calculate total
+  // Convert text content to numbers and sum
   let total = 0;
   priceElements.forEach(element => {
-    total += parseInt(element.textContent, 10);
+    const value = parseInt(element.textContent.trim(), 10);
+    if (!isNaN(value)) {
+      total += value;
+    }
   });
   
-  // Get the table
+  // Get table and remove existing total row
   const table = document.querySelector('table');
-  
-  // Remove existing total row if present (for multiple clicks)
-  const existingTotalRow = table.querySelector('td[colspan="2"]');
-  if (existingTotalRow) {
-    existingTotalRow.parentElement.remove();
+  const existingTotal = table.querySelector('#ans');
+  if (existingTotal) {
+    existingTotal.parentElement.remove();
   }
   
-  // Create new row for total with ID for test verification
+  // Create new total row
   const totalRow = document.createElement('tr');
   const totalCell = document.createElement('td');
-  totalCell.id = 'ans';  // Required for Cypress test
+  totalCell.id = 'ans';
   totalCell.colSpan = 2;
-  totalCell.textContent = `Total: Rs ${total}`;
+  totalCell.textContent = total.toString();  // Just the number for test
   totalCell.style.fontWeight = 'bold';
   totalCell.style.textAlign = 'right';
   
-  // Add total cell to row and row to table
   totalRow.appendChild(totalCell);
   table.appendChild(totalRow);
-  
 };
 
 getSumBtn.addEventListener("click", getSum);
-
